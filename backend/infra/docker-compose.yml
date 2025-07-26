@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    platform: linux/amd64
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: yaksense-back
+      TZ: Asia/Seoul
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    environment:
+      TZ: Asia/Seoul
+    command: [ "redis-server" ]
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    ports:
+      - 5540:5540
+    environment:
+      TZ: Asia/Seoul
+    depends_on:
+      - redis
