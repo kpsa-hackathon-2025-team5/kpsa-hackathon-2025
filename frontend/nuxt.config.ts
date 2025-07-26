@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   ssr: false,
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.API_BASE_URL || ' https://4eb384f77765.ngrok-free.app'
+      apiBaseUrl: process.env.API_BASE_URL || 'https://fe7558cd5f46.ngrok-free.app/'
     }
   },
   vite: {
