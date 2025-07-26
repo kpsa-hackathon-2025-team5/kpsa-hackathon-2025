@@ -4,7 +4,7 @@ const { apiCall } = useApi();
 
 // 환자 이름을 저장할 반응형 변수
 const patientName = ref("사용자");
-const visitSchedules = ref([]);
+const visitSchedules = ref<any[]>([]);
 const isLoading = ref(false);
 
 const goBack = () => {
@@ -57,16 +57,16 @@ const getVisitSchedules = async () => {
     console.log("방문 일정 API 요청", { patientId });
 
     // 방문 일정 API 호출 (실제 엔드포인트에 맞게 수정 필요)
-    const result = await apiCall(`/api/v1/visits/patient/${patientId}`, {
+    const result = await apiCall(`/api/v1/visits/patients/${patientId}`, {
       method: "GET",
     });
 
     console.log("방문 일정 응답:", result);
-    visitSchedules.value = result.visits || result.schedules || result || [];
+    visitSchedules.value = result || [];
   } catch (error) {
     console.log("GET 요청 실패, POST 방식으로 재시도");
 
-    try {
+   /* try {
       const result = await apiCall("/api/v1/visits", {
         method: "POST",
         body: { patientId: 9 },
@@ -102,7 +102,7 @@ const getVisitSchedules = async () => {
           purpose: "신규 처방전 상담",
         },
       ];
-    }
+    }*/
   } finally {
     isLoading.value = false;
   }
@@ -119,22 +119,30 @@ const formatDate = (dateString: string) => {
   return `${month}월 ${day}일 (${weekday})`;
 };
 
+// dateString에서 hh:mm 형식의 시간 추출
+const extractTime = (dateString: string) => {
+  const date = new Date(dateString);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
 // 상태별 스타일 및 텍스트
 const getStatusInfo = (status: string) => {
   switch (status) {
-    case "confirmed":
+    case "APPROVED":
       return {
         text: "확정",
         bgColor: "bg-blue-100",
         textColor: "text-blue-800",
       };
-    case "pending":
+    case "PENDING":
       return {
         text: "대기중",
         bgColor: "bg-yellow-100",
         textColor: "text-yellow-800",
       };
-    case "completed":
+    case "COMPLETED":
       return {
         text: "완료",
         bgColor: "bg-green-100",
@@ -160,12 +168,12 @@ const viewScheduleDetail = (schedule: any) => {
 const requestNewSchedule = () => {
   console.log("새 일정 요청");
   // 새 일정 요청 페이지로 이동
-  // navigateTo("/pharmacy-visit/new");
+  navigateTo("/calendar");
 };
 
 // 컴포넌트 마운트 시 데이터 가져오기
 onMounted(async () => {
-  await getPatientInfo();
+  // await getPatientInfo();
   await getVisitSchedules();
 });
 </script>
@@ -275,24 +283,24 @@ onMounted(async () => {
             <div class="flex-1">
               <div class="flex items-center space-x-3 mb-2">
                 <h3 class="text-lg font-bold text-gray-900">
-                  {{ formatDate(schedule.date) }}
+                  {{ formatDate(schedule.scheduledStartDateTime) }}
                 </h3>
                 <span
                   :class="[
                     'px-3 py-1 rounded-full text-xs font-medium',
-                    getStatusInfo(schedule.status).bgColor,
-                    getStatusInfo(schedule.status).textColor,
+                    getStatusInfo(schedule.visitStatus).bgColor,
+                    getStatusInfo(schedule.visitStatus).textColor,
                   ]"
                 >
-                  {{ getStatusInfo(schedule.status).text }}
+                  {{ getStatusInfo(schedule.visitStatus).text }}
                 </span>
               </div>
-              <p class="text-gray-600 text-sm mb-1">⏰ {{ schedule.time }}</p>
+              <p class="text-gray-600 text-sm mb-1">⏰ {{ extractTime(schedule.scheduledStartDateTime) }}</p>
               <p class="text-gray-600 text-sm mb-3">
-                👨‍⚕️ {{ schedule.pharmacist }}
+                👨‍⚕️ {{ schedule.pharmacistName }}
               </p>
               <p class="text-gray-800 text-sm">
-                {{ schedule.purpose }}
+                {{ schedule.purposeMemo || "방문 목적이 설정되지 않았습니다." }}
               </p>
             </div>
 
