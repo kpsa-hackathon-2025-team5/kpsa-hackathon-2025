@@ -148,8 +148,13 @@ const caregivingList = [
       <section>
         <button
           @click="confirmSelection"
-          class="w-full py-5 rounded-2xl font-semibold text-lg bg-gray-300 text-gray-500 cursor-not-allowed"
-          disabled
+          :disabled="!selectedCaregiving"
+          :class="[
+            'w-full py-5 rounded-2xl font-semibold text-lg transition-all',
+            selectedCaregiving
+              ? 'bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+          ]"
         >
           신청하기
         </button>
