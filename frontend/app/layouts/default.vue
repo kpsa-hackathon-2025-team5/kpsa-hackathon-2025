@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+const hideNavigationRoutes = ['/', '/splash',]
 </script>
 
 <template>
@@ -34,11 +34,11 @@
             class="h-full w-full bg-white sm:overflow-hidden sm:rounded-[2rem] sm:ring-2 sm:ring-inset sm:ring-gray-800">
           <div class="h-full w-full flex flex-col relative">
             <!-- Main Content -->
-            <div class="flex-1 overflow-y-auto pb-16 ">
+            <div class="flex-1 overflow-y-auto">
               <slot/>
             </div>
 
-            <BottomNavigation/>
+             <BottomNavigation v-if="!hideNavigationRoutes.includes($route.path)" />
 
           </div>
         </div>

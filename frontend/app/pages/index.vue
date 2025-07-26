@@ -1,5 +1,11 @@
 <script setup lang="ts">
 
+// x초 후 로그인 페이지로 자동 이동
+    onMounted(() => {
+        setTimeout(() => {
+        navigateTo('/login')
+        }, 2000)
+    })
 
 
 

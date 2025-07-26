@@ -20,7 +20,7 @@ const selectUserType = (type: string) => {
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
         </svg>
       </button>
-      <p class=" absolute left-35  text-lg font-medium">사용자 유형</p>
+      <p class=" absolute left-33  text-lg font-medium">사용자 유형</p>
     </div>
 
     <!-- 사용자 유형 wrap -->
@@ -39,9 +39,9 @@ const selectUserType = (type: string) => {
           class="w-full bg-blue-600 text-white py-5 px-6 rounded-full text-xl font-medium hover:bg-blue-700 transition-all duration-200 flex items-center justify-between shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
         >
           <span>약사용</span>
-          <div class="w-12 h-0.5 bg-white rounded-full relative">
-            <div class="absolute -right-2 -top-1 w-0 h-0 border-l-4 border-l-white border-t-2 border-b-2 border-t-transparent border-b-transparent"></div>
-          </div>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
         </button>
 
         <button
@@ -49,9 +49,9 @@ const selectUserType = (type: string) => {
           class="w-full bg-blue-600 text-white py-5 px-6 rounded-full text-xl font-medium hover:bg-blue-700 transition-all duration-200 flex items-center justify-between shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
         >
           <span>보호자용</span>
-          <div class="w-12 h-0.5 bg-white rounded-full relative">
-            <div class="absolute -right-2 -top-1 w-0 h-0 border-l-4 border-l-white border-t-2 border-b-2 border-t-transparent border-b-transparent"></div>
-          </div>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
         </button>
 
         <button
@@ -59,9 +59,9 @@ const selectUserType = (type: string) => {
           class="w-full bg-blue-600 text-white py-5 px-6 rounded-full text-xl font-medium hover:bg-blue-700 transition-all duration-200 flex items-center justify-between shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
         >
           <span>복용자용</span>
-          <div class="w-12 h-0.5 bg-white rounded-full relative">
-            <div class="absolute -right-2 -top-1 w-0 h-0 border-l-4 border-l-white border-t-2 border-b-2 border-t-transparent border-b-transparent"></div>
-          </div>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
         </button>
       </div>
     </div>
