@@ -47,7 +47,7 @@ const confirmBooking = async () => {
     const timeStr = selectedTime.value.padStart(5, "0");
 
     const requestBody = {
-      patientId: 9,
+      patientId: 10,
       pharmacistId: 7,
       scheduledStartDateTime: `${dateStr} ${timeStr}`,
     };
@@ -61,6 +61,7 @@ const confirmBooking = async () => {
 
     console.log("예약 성공:", result);
     alert("예약이 완료되었습니다!");
+    navigateTo("/takerInformation");
   } catch (error: any) {
     console.error("예약 실패:", error);
 

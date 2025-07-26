@@ -74,14 +74,16 @@ const medicationData = [
 
 // 의약사 정보
 const pharmacistInfo = {
-  name: "한지윤",
+  name: "김지윤",
   title: "약사, 복약",
   license: "면허번호",
   number: "101-1234-56789",
-  location: "부산광역시",
-  details: "부산 광역시 ~구 ~동 ~번지-~호",
-  phone: "010-0000-0000(000~000-0000)",
-  email: "chunhahsu@nate.com (2000-00~2000-00)",
+  phone: "010-1234-5678",
+  location: "서울특별시",
+  history: [
+    "신촌약 약국 근무 (2025.05~현재)",
+    "종합내 병원 근무 (2021.05~2025.04)]",
+  ],
 };
 </script>
 
@@ -310,17 +312,27 @@ const pharmacistInfo = {
                 >
               </div>
               <div class="text-sm text-gray-600">
-                <div>{{ pharmacistInfo.license }}</div>
-                <div>{{ pharmacistInfo.number }}</div>
+                <div>
+                  {{ pharmacistInfo.license }} : {{ pharmacistInfo.number }}
+                </div>
+                <div>연락처: {{ pharmacistInfo.phone }}</div>
               </div>
             </div>
           </div>
 
           <div class="space-y-2 text-sm text-gray-600">
             <div>위치: {{ pharmacistInfo.location }}</div>
-            <div>→ {{ pharmacistInfo.details }}</div>
-            <div>연락처: {{ pharmacistInfo.phone }}</div>
-            <div>이메일: {{ pharmacistInfo.email }}</div>
+            <div>
+              경력
+              <ul class="list-disc ml-5">
+                <li
+                  v-for="(item, index) in pharmacistInfo.history"
+                  :key="index"
+                >
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
