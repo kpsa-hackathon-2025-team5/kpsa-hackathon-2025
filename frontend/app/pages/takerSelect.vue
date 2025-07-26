@@ -40,7 +40,7 @@ const confirmSelection = (): void => {
   if (selectedCaregiving.value) {
     console.log("선택된 복용자:", selectedCaregiving.value);
     // 다음 페이지로 이동
-    navigateTo("/serviceApply");
+    navigateTo(`/takerInformation/${selectedCaregiving.value}`);
   }
 };
 

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useMembersApi } from "@/composable/useMembersApi";
 import { useApi } from "@/composable/useApi";
+const route = useRoute()
+
 const { apiCall } = useApi();
 
 // 환자 이름을 저장할 반응형 변수
@@ -29,7 +31,7 @@ const selectService = (serviceType: string) => {
 // 환자 정보 가져오기 (기존 userInfo 함수 수정)
 const getPatientInfo = async () => {
   try {
-    const patientId = 10;
+    const patientId = route.params.id
 
     console.log("환자 정보 API 요청", { patientId });
 
@@ -42,7 +44,7 @@ const getPatientInfo = async () => {
 
     // API 응답에서 이름 추출 (실제 API 응답 구조에 맞게 조정)
     const name =
-      result.name || result.patientName || result.memberName || "사용자";
+        result.name || result.patientName || result.memberName || "사용자";
     patientName.value = name;
 
     console.log("환자 이름:", name);
@@ -60,7 +62,7 @@ const getPatientInfo = async () => {
       console.log("POST API 응답:", result);
 
       const name =
-        result.name || result.patientName || result.memberName || "사용자";
+          result.name || result.patientName || result.memberName || "사용자";
       patientName.value = name;
 
       return result;
@@ -109,25 +111,25 @@ const services = [
     <!-- 헤더 -->
     <div class="relative flex items-center px-6 py-6 bg-gray-100">
       <button
-        @click="goBack"
-        class="mr-4 p-2 hover:bg-gray-200 rounded-lg transition-colors"
+          @click="goBack"
+          class="mr-4 p-2 hover:bg-gray-200 rounded-lg transition-colors"
       >
         <svg
-          class="w-6 h-6 text-gray-800"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+            class="w-6 h-6 text-gray-800"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
           />
         </svg>
       </button>
       <h1
-        class="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold text-gray-900"
+          class="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold text-gray-900"
       >
         {{ patientName }}
       </h1>
@@ -138,10 +140,10 @@ const services = [
       <!-- 서비스 카드들 -->
       <div class="space-y-4">
         <div
-          v-for="service in services"
-          :key="service.id"
-          @click="selectService(service.id)"
-          class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95"
+            v-for="service in services"
+            :key="service.id"
+            @click="selectService(service.id)"
+            class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-all active:scale-95"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4 flex-1">
@@ -156,37 +158,37 @@ const services = [
               <div class="relative w-16 h-16 flex-shrink-0">
                 <!-- 복약 현황 확인하기 아이콘 (MedicalRecord.png) -->
                 <div
-                  v-if="service.id === 'medication-check'"
-                  class="w-full h-full flex items-center justify-center"
+                    v-if="service.id === 'medication-check'"
+                    class="w-full h-full flex items-center justify-center"
                 >
                   <img
-                    src="~/assets/MedicalRecord.png"
-                    alt="복약 현황 확인"
-                    class="w-14 h-14 object-contain"
+                      src="~/assets/MedicalRecord.png"
+                      alt="복약 현황 확인"
+                      class="w-14 h-14 object-contain"
                   />
                 </div>
 
                 <!-- 리포트 열람하기 아이콘 (report.png) -->
                 <div
-                  v-else-if="service.id === 'report-view'"
-                  class="w-full h-full flex items-center justify-center"
+                    v-else-if="service.id === 'report-view'"
+                    class="w-full h-full flex items-center justify-center"
                 >
                   <img
-                    src="~/assets/report.png"
-                    alt="리포트 열람"
-                    class="w-14 h-14 object-contain"
+                      src="~/assets/report.png"
+                      alt="리포트 열람"
+                      class="w-14 h-14 object-contain"
                   />
                 </div>
 
                 <!-- 약사 방문 일정 확인하기 아이콘 (visit.png) -->
                 <div
-                  v-else-if="service.id === 'pharmacy-visit'"
-                  class="w-full h-full flex items-center justify-center"
+                    v-else-if="service.id === 'pharmacy-visit'"
+                    class="w-full h-full flex items-center justify-center"
                 >
                   <img
-                    src="~/assets/visit.png"
-                    alt="약사 방문 일정"
-                    class="w-14 h-14 object-contain"
+                      src="~/assets/visit.png"
+                      alt="약사 방문 일정"
+                      class="w-14 h-14 object-contain"
                   />
                 </div>
               </div>
