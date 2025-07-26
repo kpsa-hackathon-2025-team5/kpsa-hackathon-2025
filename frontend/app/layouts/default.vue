@@ -38,6 +38,8 @@
               <slot/>
             </div>
 
+            <BottomNavigation/>
+
           </div>
         </div>
       </div>

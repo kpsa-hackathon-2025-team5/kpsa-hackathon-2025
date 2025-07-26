@@ -2,7 +2,7 @@ spring:
   application:
     name: yaksense-backend
   datasource:
-    url: jdbc:postgresql://localhost:5432/yaksense
+    url: jdbc:postgresql://localhost:15432/yaksense
     username: postgres
     password: postgres
   jpa:
