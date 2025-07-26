@@ -1,0 +1,38 @@
+
+
+### 환자 정보 조회
+GET {{BASE_URL}}/api/v1/patients/10
+
+
+### 환자의 복약 스케줄 조회 테스트(알림 보낼 때 필요한 것 : 클라이언트용 X)
+GET {{BASE_URL}}/api/v1/patients/10/medicationSchedules
+
+
+### 알림 보낸 후 MedicationRecord가 생성되었다.(테스트용)
+POST http://localhost:8080/api/v1/medications/records
+Content-Type: application/json
+
+{
+  "memberId": 10,
+  "medicationScheduleId": 18
+}
+
+### 환자가 복약 기록을 등록한다.
+POST http://localhost:8080/api/v1/medications/records/taken
+Content-Type: application/json
+
+{
+  "medicationScheduleId": 18,
+  "sideEffectType": "DIZZINESS",
+  "sideEffectLevel": "MILD",
+  "sideEffectNote": "없음"
+}
+
+
+
+####
+
+###
+GET {{BASE_URL}}/api/v1/patients/10/medicationRecords?startDate=2025-07-01&endDate=2025-07-31
+
+
