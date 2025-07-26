@@ -1,17 +1,40 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useMembersApi } from "@/composable/useMembersApi";
 
-const selectedCaregiving = ref("");
+// 타입 정의
+interface CaregivingPerson {
+  id: string;
+  name: string;
+  age: number;
+  gender: string;
+  image: string;
+}
 
-const goBack = () => {
+interface Member {
+  id: number;
+  name: string;
+  memberType: string;
+  status: string;
+  birthDate?: string;
+  gender?: string;
+}
+
+const selectedCaregiving = ref<string>("");
+const caregivingList = ref<CaregivingPerson[]>([]);
+const isLoading = ref<boolean>(true);
+
+const { getMembers } = useMembersApi();
+
+const goBack = (): void => {
   window.history.back();
 };
 
-const selectCaregiving = (person: string) => {
+const selectCaregiving = (person: string): void => {
   selectedCaregiving.value = person;
 };
 
-const confirmSelection = () => {
+const confirmSelection = (): void => {
   if (selectedCaregiving.value) {
     console.log("선택된 복용자:", selectedCaregiving.value);
     // 다음 페이지로 이동
@@ -19,33 +42,81 @@ const confirmSelection = () => {
   }
 };
 
-// 복용자 데이터
-const caregivingList = [
-  {
-    id: "lee-jeong-sun",
-    name: "이정순",
-    age: 79,
-    gender: "여성",
-    image:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "kim-cheol-su",
-    name: "김철수",
-    age: 81,
-    gender: "남성",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-  },
-  {
-    id: "kim-jeong-hee",
-    name: "김정희",
-    age: 86,
-    gender: "여성",
-    image:
-      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face",
-  },
-];
+// 복용자 데이터 불러오기
+const loadPatients = async (): Promise<void> => {
+  try {
+    isLoading.value = true;
+    const members: Member[] = await getMembers();
+
+    // PATIENT 타입의 멤버만 필터링하고 변환
+    caregivingList.value = members
+      .filter(
+        (member: Member) =>
+          member.memberType === "PATIENT" && member.status === "ACTIVE"
+      )
+      .map(
+        (member: Member): CaregivingPerson => ({
+          id: member.id.toString(),
+          name: member.name,
+          age: calculateAge(member.birthDate) || 79,
+          gender: member.gender || "여성",
+          image: `https://images.unsplash.com/photo-${
+            member.id % 2 === 0
+              ? "1544005313-94ddf0286df2"
+              : "1507003211169-0a1dd7228f2d"
+          }?w=150&h=150&fit=crop&crop=face`,
+        })
+      );
+  } catch (error) {
+    console.error("복용자 데이터 로딩 실패:", error);
+    // 에러 시 기본 데이터 사용
+    caregivingList.value = [
+      {
+        id: "lee-jeong-sun",
+        name: "이정순",
+        age: 79,
+        gender: "여성",
+        image:
+          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+      },
+      {
+        id: "kim-cheol-su",
+        name: "김철수",
+        age: 81,
+        gender: "남성",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      },
+      {
+        id: "kim-jeong-hee",
+        name: "김정희",
+        age: 86,
+        gender: "여성",
+        image:
+          "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face",
+      },
+    ] as CaregivingPerson[];
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// 나이 계산 함수
+const calculateAge = (birthDate?: string): number | null => {
+  if (!birthDate) return null;
+  const today = new Date();
+  const birth = new Date(birthDate);
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDiff = today.getMonth() - birth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+onMounted(() => {
+  loadPatients();
+});
 </script>
 
 <template>
@@ -87,7 +158,12 @@ const caregivingList = [
 
       <!-- 복용자 목록 -->
       <section class="mb-6">
-        <div class="space-y-4">
+        <div v-if="isLoading" class="flex justify-center py-8">
+          <div
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+          ></div>
+        </div>
+        <div v-else class="space-y-4">
           <div
             v-for="person in caregivingList"
             :key="person.id"
