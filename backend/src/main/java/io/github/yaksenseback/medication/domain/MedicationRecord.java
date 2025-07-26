@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -53,6 +54,11 @@ public class MedicationRecord extends BaseEntity {
      */
     private boolean isTaken = false;
 
+    /**
+     * 먹어야하는 날짜
+     */
+    private LocalDate scheduledAt; //FIXME: 복약 스케줄이 남겨진 날짜
+
     private LocalDateTime takenAt; //FIXME: 복약 기록이 남겨진 시간
 
     /**
@@ -76,8 +82,9 @@ public class MedicationRecord extends BaseEntity {
     private String sideEffectNote;
 
 
-    public MedicationRecord(Long memberId, MedicationSchedule medicationSchedule) {
+    public MedicationRecord(Long memberId, LocalDate scheduledAt, MedicationSchedule medicationSchedule) {
         this.memberId = memberId;
+        this.scheduledAt = scheduledAt;
         this.medicationSchedule = medicationSchedule;
     }
 

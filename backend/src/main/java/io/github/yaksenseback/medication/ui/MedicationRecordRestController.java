@@ -1,5 +1,6 @@
 package io.github.yaksenseback.medication.ui;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.github.yaksenseback.medication.application.CreateDailySideEffectRecordService;
 import io.github.yaksenseback.medication.application.MedicationRecordService;
 import io.github.yaksenseback.medication.application.dto.CreateDailySideEffectRecordRequest;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -26,10 +28,11 @@ public class MedicationRecordRestController {
 
 
     @PostMapping
-    public MedicationRecord createMedicationRecord(@RequestBody CreateMedicationRecordRequest medicationRecord) {
+    public MedicationRecord createMedicationRecord(@RequestBody CreateMedicationRecordRequest request) {
         return medicationRecordService.createMedicationRecord(
-                medicationRecord.memberId(),
-                medicationRecord.medicationScheduleId()
+                request.memberId(),
+                request.scheduledAt(),
+                request.medicationScheduleId()
         );
     }
 
@@ -37,6 +40,7 @@ public class MedicationRecordRestController {
     public void taken(@RequestBody TakenMedicationRecordRequest request) {
         medicationRecordService.taken(
                 request.medicationScheduleIds(),
+                request.scheduledAt(),
                 request.sideEffectType(),
                 request.sideEffectLevel(),
                 request.sideEffectNote()
@@ -48,10 +52,16 @@ public class MedicationRecordRestController {
         return createDailySideEffectRecordService.createDailySideEffectRecord(request);
     }
 
-    public record CreateMedicationRecordRequest(Long memberId, Long medicationScheduleId) {
+    public record CreateMedicationRecordRequest(
+            Long memberId,
+            Long medicationScheduleId,
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+            LocalDate scheduledAt) {
     }
 
     public record TakenMedicationRecordRequest(List<Long> medicationScheduleIds,
+                                               @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+                                               LocalDate scheduledAt,
                                                SideEffectType sideEffectType,
                                                SideEffectLevel sideEffectLevel,
                                                String sideEffectNote) {
