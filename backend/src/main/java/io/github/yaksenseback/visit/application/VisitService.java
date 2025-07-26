@@ -25,6 +25,16 @@ public class VisitService {
     private final VisitResultRepository visitResultRepository;
 
     public Long registerVisit(RegisterVisitRequest request) {
+
+        visitRepository.findAllByPatientIdAndPharmacistIdAndScheduledStartDateTimeBetween(
+                request.getPatientId(),
+                request.getPharmacistId(),
+                request.getScheduledStartDateTime().toLocalDate().atStartOfDay(),
+                request.getScheduledStartDateTime().toLocalDate().atTime(23, 59, 59)
+        ).ifPresent(existingVisit -> {
+            throw new ApplicationException("이미 예약된 방문이 있습니다: " + existingVisit.getId());
+        });
+
         Visit visit = Visit.builder()
                 .patient(patientRepository.getReferenceById(request.getPatientId()))
                 .pharmacist(pharmacistRepository.getReferenceById(request.getPharmacistId()))
@@ -33,6 +43,7 @@ public class VisitService {
                 .scheduledEndDate(request.getScheduledEndDate())
                 .estimatedDuration(request.getEstimatedDuration())
                 .visitPurpose(request.getVisitPurpose())
+                .purposeMemo(request.getPurposeMemo())
                 .patientAddress(request.getPatientAddress())
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())

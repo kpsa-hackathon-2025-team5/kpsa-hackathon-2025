@@ -21,6 +21,7 @@ public class RegisterVisitRequest {
     private final LocalDateTime scheduledEndDate;
     private final Integer estimatedDuration;
     private final VisitPurpose visitPurpose;
+    private final String purposeMemo;
     private final String patientAddress;
     private final BigDecimal latitude;
     private final BigDecimal longitude;
@@ -28,7 +29,7 @@ public class RegisterVisitRequest {
     private final String specialInstructions;
 
     public RegisterVisitRequest(Long patientId, Long pharmacistId, LocalDateTime scheduledStartDateTime, LocalDateTime scheduledStartDate,
-                                LocalDateTime scheduledEndDate, Integer estimatedDuration, VisitPurpose visitPurpose,
+                                LocalDateTime scheduledEndDate, Integer estimatedDuration, VisitPurpose visitPurpose, String purposeMemo,
                                 String patientAddress, BigDecimal latitude, BigDecimal longitude, String emergencyContact,
                                 String specialInstructions) {
         this.patientId = patientId;
@@ -38,6 +39,7 @@ public class RegisterVisitRequest {
         this.scheduledEndDate = scheduledEndDate;
         this.estimatedDuration = estimatedDuration;
         this.visitPurpose = visitPurpose;
+        this.purposeMemo = purposeMemo;
         this.patientAddress = patientAddress;
         this.latitude = latitude;
         this.longitude = longitude;

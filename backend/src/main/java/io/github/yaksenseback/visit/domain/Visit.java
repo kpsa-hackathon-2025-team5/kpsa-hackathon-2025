@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 import static io.github.yaksenseback.visit.domain.VisitPurpose.REGULAR_CHECKUP;
@@ -121,6 +120,11 @@ public class Visit extends BaseEntity {
     private String emergencyContact;
 
     /**
+     *
+     */
+    private String purposeMemo;
+
+    /**
      * 특별 지시사항
      */
     @Column(name = "special_instructions", columnDefinition = "TEXT")
@@ -136,7 +140,7 @@ public class Visit extends BaseEntity {
     public Visit(Patient patient, Pharmacist pharmacist, BigDecimal latitude, BigDecimal longitude,
                  LocalDateTime scheduledStartDateTime,
                  LocalDateTime scheduledStartDate, LocalDateTime scheduledEndDate, Integer estimatedDuration,
-                 VisitPurpose visitPurpose, String patientAddress, String emergencyContact,
+                 VisitPurpose visitPurpose, String purposeMemo, String patientAddress, String emergencyContact,
                  String specialInstructions) {
         this.patient = patient;
         this.pharmacist = pharmacist;
@@ -145,6 +149,7 @@ public class Visit extends BaseEntity {
         this.scheduledEndDate = scheduledEndDate;
         this.estimatedDuration = estimatedDuration;
         this.visitPurpose = REGULAR_CHECKUP;
+        this.purposeMemo = purposeMemo;
         this.patientAddress = patientAddress;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -178,7 +183,7 @@ public class Visit extends BaseEntity {
         }
         this.status = VisitStatus.COMPLETED;
         this.actualEndDate = actualEndDate;
-        this.actualDuration = Duration.between(this.actualStartDate, this.actualEndDate).toMinutes();
+//        this.actualDuration = Duration.between(this.actualStartDate, this.actualEndDate).toMinutes();
         this.resultInstructions = resultInstructions;
     }
 
