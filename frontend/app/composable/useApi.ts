@@ -22,6 +22,14 @@ export const useApi = () => {
     }
   };
 
+  const getImageUrl = (imagePath: string | undefined) => {
+    if (!imagePath) {
+      return `${baseURL}/api/v1/storage/image/default`;
+    }
+
+    return `${baseURL}/api/v1/storage/image/${imagePath}`
+  }
+
   const authenticatedCall = async (endpoint: string, options: any = {}) => {
     if (!memberId) {
       throw new Error("사용자가 인증되지 않았습니다.");
@@ -39,5 +47,6 @@ export const useApi = () => {
   return {
     apiCall,
     authenticatedCall,
+    getImageUrl
   };
 };
