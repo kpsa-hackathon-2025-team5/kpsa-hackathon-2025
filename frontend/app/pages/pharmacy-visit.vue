@@ -14,7 +14,7 @@ const goBack = () => {
 // 환자 정보 가져오기
 const getPatientInfo = async () => {
   try {
-    const patientId = 9;
+    const patientId = 10;
     console.log("환자 정보 API 요청", { patientId });
 
     const result = await apiCall(`/api/v1/members/${patientId}`, {

@@ -18,7 +18,7 @@ const getPatientInfo = async () => {
     const patientId = 9;
     console.log("환자 정보 API 요청", { patientId });
 
-    const result = await apiCall(`/api/v1/members/${patientId}`, {
+    const result = await apiCall(`/api/v1/visits/patients/${patientId}`, {
       method: "GET",
     });
 
@@ -34,7 +34,7 @@ const getPatientInfo = async () => {
     try {
       const result = await apiCall("/api/v1/members", {
         method: "POST",
-        body: { patientId: 9 },
+        body: { patientId: 10 },
       });
 
       const name =
@@ -81,8 +81,8 @@ const getVisitRecords = async () => {
     visitRecords.value = records
       .filter((record) => record && record.createdAt) // null 체크
       .sort((a, b) => {
-        const dateA = new Date(a.createdAt || a.visitDate || a.updatedAt);
-        const dateB = new Date(b.createdAt || b.visitDate || b.updatedAt);
+        const dateA = new Date(a.scheduledStartDateTime);
+        const dateB = new Date(b.scheduledStartDateTime);
         return dateB.getTime() - dateA.getTime();
       });
 
@@ -164,49 +164,12 @@ onMounted(async () => {
     <div class="flex-1 px-6 py-8 overflow-y-auto pb-24">
       <!-- 프로필 및 아이콘 섹션 -->
       <div class="flex items-center justify-center mb-8">
-        <!-- 프로필 아이콘 (조 대신 첫 글자 사용) -->
-        <div
-          class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mr-4"
-        >
-          <span class="text-white text-xl font-bold">{{
-            patientName.charAt(0) || "P"
-          }}</span>
-        </div>
-
-        <!-- 의료 리포트 아이콘 -->
-        <div class="relative">
-          <div
-            class="w-24 h-24 bg-blue-100 rounded-2xl flex items-center justify-center"
-          >
-            <svg
-              class="w-12 h-12 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-          </div>
-          <!-- 청진기 아이콘 -->
-          <div
-            class="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center"
-          >
-            <svg
-              class="w-4 h-4 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0016.5 3c-1.76 0-3.22.79-4.21 2.09C11.28 3.79 9.76 3 8 3A5.5 5.5 0 002.5 8.5c0 2.29 1.51 4.04 3 5.5l6.5 6.5 7-7z"
-              />
-            </svg>
-          </div>
-        </div>
+        <!-- 프로필 이미지만 -->
+        <img
+          src="~/assets/report.png"
+          alt="의료 기록"
+          class="w-24 h-24 object-contain"
+        />
       </div>
 
       <!-- 제목 섹션 -->
@@ -260,49 +223,9 @@ onMounted(async () => {
         >
           <div class="flex items-center justify-between">
             <div class="flex-1">
-              <h3 class="text-lg font-bold text-gray-900 mb-2">
-                {{
-                  formatDate(
-                    record.createdAt || record.visitDate || record.updatedAt
-                  )
-                }}
+              <h3 class="text-lg font-bold text-gray-900">
+                {{ formatDate(record.scheduledStartDateTime) }}
               </h3>
-
-              <!-- 상담 정보 -->
-              <div class="space-y-1 mb-3">
-                <p class="text-sm text-gray-600">
-                  👨‍⚕️ {{ getPharmacistName(record) }}
-                </p>
-                <p class="text-sm text-gray-600">
-                  📋 {{ getConsultationType(record) }}
-                </p>
-                <p v-if="record.pharmacyName" class="text-sm text-gray-600">
-                  🏥 {{ record.pharmacyName }}
-                </p>
-                <div
-                  v-if="record.medications && record.medications.length > 0"
-                  class="text-sm text-gray-600"
-                >
-                  💊 {{ record.medications.join(", ") }}
-                </div>
-              </div>
-
-              <!-- 상담 내용 미리보기 -->
-              <p
-                v-if="record.notes || record.summary || record.memberType"
-                class="text-sm text-gray-700 line-clamp-2"
-              >
-                {{
-                  record.notes ||
-                  record.summary ||
-                  `${record.memberType} 복약 상담 진행`
-                }}
-              </p>
-
-              <!-- API 데이터가 있는 경우 기본 메시지 -->
-              <p v-else-if="record.id" class="text-sm text-gray-700">
-                복약 상담이 진행되었습니다.
-              </p>
             </div>
 
             <!-- 화살표 아이콘 -->

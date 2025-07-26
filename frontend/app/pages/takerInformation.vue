@@ -29,7 +29,7 @@ const selectService = (serviceType: string) => {
 // 환자 정보 가져오기 (기존 userInfo 함수 수정)
 const getPatientInfo = async () => {
   try {
-    const patientId = 9;
+    const patientId = 10;
 
     console.log("환자 정보 API 요청", { patientId });
 
