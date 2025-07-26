@@ -11,7 +11,7 @@ export const useApi = () => {
       return await $fetch(`${baseURL}${endpoint}`, {
         headers: {
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
+          "ngrok-skip-browser-warning": "69420",
           ...options.headers,
         },
         ...options,
@@ -30,7 +30,7 @@ export const useApi = () => {
       ...options,
       headers: {
         Authorization: `Bearer ${memberId.value}`,
-        "ngrok-skip-browser-warning": "true",
+        "ngrok-skip-browser-warning": "69420",
         ...options.headers,
       },
     });

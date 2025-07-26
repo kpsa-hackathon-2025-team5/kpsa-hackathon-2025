@@ -5,7 +5,7 @@ const goBack = () => {
 
 const selectUserType = (type: string) => {
   console.log("선택된 유형:", type);
-  // 다음 페이지로 이동 로직
+  navigateTo("/login");
 };
 </script>
 
