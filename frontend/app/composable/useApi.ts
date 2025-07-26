@@ -1,5 +1,3 @@
-import {useAuthStore} from "~/stores/useAuthStore"
-
 export const useApi = () => {
     const config = useRuntimeConfig()
     const baseURL = config.public.apiBaseUrl
@@ -11,6 +9,7 @@ export const useApi = () => {
             return await $fetch(`${baseURL}${endpoint}`, {
                 headers: {
                     'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': '69420',
                     ...options.headers
                 },
                 ...options
