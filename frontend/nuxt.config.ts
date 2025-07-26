@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   ssr: false,
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:8080'
+      apiBaseUrl: process.env.API_BASE_URL || ' https://4eb384f77765.ngrok-free.app'
     }
   },
   vite: {
@@ -17,7 +17,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     output: {
-      publicDir: '..\\src\\main\\resources\\static'
+      publicDir: '..\\backend\\src\\main\\resources\\static'
     }
   },
   css: ["~/assets/app.css"],
