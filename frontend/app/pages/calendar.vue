@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import { useApi } from "@/composable/useApi";
+const { apiCall } = useApi();
 
 const selectedDate = ref(new Date());
 const selectedTime = ref("");
@@ -29,14 +31,42 @@ const formatSelectedDate = () => {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
 };
 
-const confirmBooking = () => {
-  if (selectedDate.value && selectedTime.value) {
-    console.log("예약 정보:", {
-      date: selectedDate.value,
-      time: selectedTime.value,
+// 기존 confirmBooking 함수를 다음과 같이 수정하세요
+// 1. 먼저 API 서버 상태 확인하는 함수 추가
+const confirmBooking = async () => {
+  if (!selectedDate.value || !selectedTime.value) {
+    alert("날짜와 시간을 모두 선택해주세요.");
+    return;
+  }
+
+  try {
+    const date = new Date(selectedDate.value);
+    const dateStr = `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    const timeStr = selectedTime.value.padStart(5, "0");
+
+    const requestBody = {
+      patientId: 9,
+      pharmacistId: 7,
+      scheduledStartDateTime: `${dateStr} ${timeStr}`,
+    };
+
+    console.log("API 요청:", requestBody);
+
+    const result = await apiCall(`/api/v1/visits`, {
+      method: "POST",
+      body: requestBody,
     });
-    // 다음 단계로 이동
-    // navigateTo('/next-step');
+
+    console.log("예약 성공:", result);
+    alert("예약이 완료되었습니다!");
+  } catch (error: any) {
+    console.error("예약 실패:", error);
+
+    const message =
+      error?.data?.message || error?.message || "알 수 없는 오류입니다.";
+    alert(`예약 실패: ${message}`);
   }
 };
 </script>

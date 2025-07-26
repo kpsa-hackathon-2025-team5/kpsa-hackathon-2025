@@ -1,19 +1,30 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const selectedService = ref("");
+const selectedServices = ref<string[]>([]);
 
 const goBack = () => {
   window.history.back();
 };
 
-const selectService = (serviceType: string) => {
-  selectedService.value = serviceType;
+const toggleService = (serviceType: string) => {
+  const index = selectedServices.value.indexOf(serviceType);
+  if (index > -1) {
+    // 이미 선택된 경우 제거
+    selectedServices.value.splice(index, 1);
+  } else {
+    // 선택되지 않은 경우 추가
+    selectedServices.value.push(serviceType);
+  }
+};
+
+const isServiceSelected = (serviceType: string) => {
+  return selectedServices.value.includes(serviceType);
 };
 
 const applyService = () => {
-  if (selectedService.value) {
-    console.log("선택된 서비스:", selectedService.value);
+  if (selectedServices.value.length > 0) {
+    console.log("선택된 서비스들:", selectedServices.value);
     // 다음 페이지로 이동
     navigateTo("/calendar");
   }
@@ -54,16 +65,19 @@ const applyService = () => {
         <h1 class="text-2xl font-bold text-black leading-tight">
           원하시는 서비스를<br />선택해주세요.
         </h1>
+        <p class="text-sm text-gray-600 mt-2">
+          여러 서비스를 선택할 수 있습니다.
+        </p>
       </div>
 
       <!-- 서비스 옵션들 -->
       <div class="space-y-4">
         <!-- 방문형 맞춤 복약 상담 서비스 -->
         <div
-          @click="selectService('visit')"
+          @click="toggleService('visit')"
           :class="[
             'rounded-2xl p-6 shadow-sm border-2 transition-all cursor-pointer',
-            selectedService === 'visit'
+            isServiceSelected('visit')
               ? 'bg-blue-500 border-blue-500 text-white'
               : 'bg-white border-gray-200 text-black',
           ]"
@@ -77,13 +91,13 @@ const applyService = () => {
                 <div
                   :class="[
                     'w-6 h-6 rounded-full border-2 flex items-center justify-center',
-                    selectedService === 'visit'
+                    isServiceSelected('visit')
                       ? 'border-white bg-white'
                       : 'border-gray-300',
                   ]"
                 >
                   <svg
-                    v-if="selectedService === 'visit'"
+                    v-if="isServiceSelected('visit')"
                     class="w-4 h-4 text-blue-500"
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -102,7 +116,7 @@ const applyService = () => {
                   <span
                     :class="[
                       'w-1 h-1 rounded-full mt-2 mr-2 flex-shrink-0',
-                      selectedService === 'visit' ? 'bg-white' : 'bg-gray-400',
+                      isServiceSelected('visit') ? 'bg-white' : 'bg-gray-400',
                     ]"
                   ></span>
                   약사가 직접 가정을 방문하여 약을 정리하고 복약 일정을 재설계
@@ -112,7 +126,7 @@ const applyService = () => {
                   <span
                     :class="[
                       'w-1 h-1 rounded-full mt-2 mr-2 flex-shrink-0',
-                      selectedService === 'visit' ? 'bg-white' : 'bg-gray-400',
+                      isServiceSelected('visit') ? 'bg-white' : 'bg-gray-400',
                     ]"
                   ></span>
                   복약 오류, 중복 처방, 유효기간 경과 등을 현장에서 바로
@@ -125,17 +139,24 @@ const applyService = () => {
                   <!-- 아이콘 자리 -->
                   <div
                     :class="[
-                      'w-12 h-12 rounded-lg flex items-center justify-center mr-4',
-                      selectedService === 'visit'
+                      'w-12 h-12 rounded-lg mr-4 flex items-center justify-center',
+                      isServiceSelected('visit')
                         ? 'bg-blue-400'
                         : 'bg-blue-100',
                     ]"
                   >
-                    🚗
+                    <img
+                      src="~/assets/visit.png"
+                      alt="방문형 서비스"
+                      class="w-8 h-8 object-contain"
+                    />
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-lg font-bold">월 2회 / 79,900원</p>
+                  <p class="text-lg font-bold">
+                    기본 월 2회 <br />
+                    회당 79,900원
+                  </p>
                 </div>
               </div>
             </div>
@@ -144,10 +165,10 @@ const applyService = () => {
 
         <!-- AI 레포트 -->
         <div
-          @click="selectService('ai')"
+          @click="toggleService('ai')"
           :class="[
             'rounded-2xl p-6 shadow-sm border-2 transition-all cursor-pointer',
-            selectedService === 'ai'
+            isServiceSelected('ai')
               ? 'bg-blue-500 border-blue-500 text-white'
               : 'bg-white border-gray-200 text-black',
           ]"
@@ -159,13 +180,13 @@ const applyService = () => {
                 <div
                   :class="[
                     'w-6 h-6 rounded-full border-2 flex items-center justify-center',
-                    selectedService === 'ai'
+                    isServiceSelected('ai')
                       ? 'border-white bg-white'
                       : 'border-gray-300',
                   ]"
                 >
                   <svg
-                    v-if="selectedService === 'ai'"
+                    v-if="isServiceSelected('ai')"
                     class="w-4 h-4 text-blue-500"
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -184,7 +205,7 @@ const applyService = () => {
                   <span
                     :class="[
                       'w-1 h-1 rounded-full mt-2 mr-2 flex-shrink-0',
-                      selectedService === 'ai' ? 'bg-white' : 'bg-gray-400',
+                      isServiceSelected('ai') ? 'bg-white' : 'bg-gray-400',
                     ]"
                   ></span>
                   환자의 복용약, 질환, 식습관을 바탕으로 복약 주의사항을 자동
@@ -194,7 +215,7 @@ const applyService = () => {
                   <span
                     :class="[
                       'w-1 h-1 rounded-full mt-2 mr-2 flex-shrink-0',
-                      selectedService === 'ai' ? 'bg-white' : 'bg-gray-400',
+                      isServiceSelected('ai') ? 'bg-white' : 'bg-gray-400',
                     ]"
                   ></span>
                   가족에게 실시간으로 공유되는 맞춤형 복약관리 리포트를
@@ -207,11 +228,15 @@ const applyService = () => {
                   <!-- 아이콘 자리 -->
                   <div
                     :class="[
-                      'w-12 h-12 rounded-lg flex items-center justify-center mr-4',
-                      selectedService === 'ai' ? 'bg-blue-400' : 'bg-blue-100',
+                      'w-12 h-12 rounded-lg mr-4 flex items-center justify-center',
+                      isServiceSelected('ai') ? 'bg-blue-400' : 'bg-blue-100',
                     ]"
                   >
-                    🤖
+                    <img
+                      src="~/assets/report.png"
+                      alt="AI 레포트"
+                      class="w-8 h-8 object-contain"
+                    />
                   </div>
                 </div>
                 <div class="text-right">
@@ -224,10 +249,10 @@ const applyService = () => {
 
         <!-- 스마트 복약 키트 -->
         <div
-          @click="selectService('smart')"
+          @click="toggleService('smart')"
           :class="[
             'rounded-2xl p-6 shadow-sm border-2 transition-all cursor-pointer',
-            selectedService === 'smart'
+            isServiceSelected('smart')
               ? 'bg-blue-500 border-blue-500 text-white'
               : 'bg-white border-gray-200 text-black',
           ]"
@@ -239,13 +264,13 @@ const applyService = () => {
                 <div
                   :class="[
                     'w-6 h-6 rounded-full border-2 flex items-center justify-center',
-                    selectedService === 'smart'
+                    isServiceSelected('smart')
                       ? 'border-white bg-white'
                       : 'border-gray-300',
                   ]"
                 >
                   <svg
-                    v-if="selectedService === 'smart'"
+                    v-if="isServiceSelected('smart')"
                     class="w-4 h-4 text-blue-500"
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -264,7 +289,7 @@ const applyService = () => {
                   <span
                     :class="[
                       'w-1 h-1 rounded-full mt-2 mr-2 flex-shrink-0',
-                      selectedService === 'smart' ? 'bg-white' : 'bg-gray-400',
+                      isServiceSelected('smart') ? 'bg-white' : 'bg-gray-400',
                     ]"
                   ></span>
                   복약 일정에 맞춰 약을 담고 정리할 수 있는 키트입니다.
@@ -273,7 +298,7 @@ const applyService = () => {
                   <span
                     :class="[
                       'w-1 h-1 rounded-full mt-2 mr-2 flex-shrink-0',
-                      selectedService === 'smart' ? 'bg-white' : 'bg-gray-400',
+                      isServiceSelected('smart') ? 'bg-white' : 'bg-gray-400',
                     ]"
                   ></span>
                   방문 서비스 혹은 맞춤 정리된 약 키트를 제공해 복약 순응도를
@@ -286,13 +311,17 @@ const applyService = () => {
                   <!-- 아이콘 자리 -->
                   <div
                     :class="[
-                      'w-12 h-12 rounded-lg flex items-center justify-center mr-4',
-                      selectedService === 'smart'
+                      'w-12 h-12 rounded-lg mr-4 flex items-center justify-center',
+                      isServiceSelected('smart')
                         ? 'bg-blue-400'
                         : 'bg-blue-100',
                     ]"
                   >
-                    📦
+                    <img
+                      src="~/assets/MedicalRecord.png"
+                      alt="스마트 키트"
+                      class="w-8 h-8 object-contain"
+                    />
                   </div>
                 </div>
                 <div class="text-right">
@@ -304,19 +333,34 @@ const applyService = () => {
         </div>
       </div>
 
+      <!-- 선택된 서비스 개수 표시 -->
+      <div
+        v-if="selectedServices.length > 0"
+        class="mt-6 p-4 bg-blue-50 rounded-xl"
+      >
+        <p class="text-sm text-blue-700">
+          <span class="font-semibold">{{ selectedServices.length }}개</span>의
+          서비스가 선택되었습니다.
+        </p>
+      </div>
+
       <!-- 신청하기 버튼 -->
       <div class="mt-8 pb-6">
         <button
           @click="applyService"
-          :disabled="!selectedService"
+          :disabled="selectedServices.length === 0"
           :class="[
             'w-full py-4 rounded-2xl font-semibold transition-all',
-            selectedService
+            selectedServices.length > 0
               ? 'bg-blue-500 text-white hover:bg-blue-600'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed',
           ]"
         >
-          신청하기
+          {{
+            selectedServices.length > 0
+              ? `${selectedServices.length}개 서비스 신청하기`
+              : "신청하기"
+          }}
         </button>
       </div>
     </div>
