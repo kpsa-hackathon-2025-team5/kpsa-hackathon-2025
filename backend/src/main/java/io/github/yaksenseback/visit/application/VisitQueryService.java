@@ -1,6 +1,7 @@
 package io.github.yaksenseback.visit.application;
 
 import io.github.yaksenseback.common.exception.ResourceNotFoundException;
+import io.github.yaksenseback.visit.application.dto.VisitDto;
 import io.github.yaksenseback.visit.application.dto.VisitSearchRequest;
 import io.github.yaksenseback.visit.domain.Visit;
 import io.github.yaksenseback.visit.domain.VisitRepository;
@@ -23,8 +24,10 @@ public class VisitQueryService {
                 .orElseThrow(() -> new ResourceNotFoundException("방문 정보를 찾을 수 없습니다: " + visitId));
     }
 
-    public List<Visit> getAllVisitsByPatient(Long patientId, VisitSearchRequest request) {
-        return visitRepository.findAllVisitsByPatient(patientId);
+    public List<VisitDto> getAllVisitsByPatient(Long patientId, VisitSearchRequest request) {
+        return visitRepository.findAllVisitsByPatient(patientId).stream()
+                .map(VisitDto::new)
+                .toList();
     }
 
     public List<Visit> getAllVisitsByPharmacist(Long pharmacistId) {

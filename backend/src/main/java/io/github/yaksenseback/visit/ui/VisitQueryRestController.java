@@ -1,6 +1,7 @@
 package io.github.yaksenseback.visit.ui;
 
 import io.github.yaksenseback.visit.application.VisitQueryService;
+import io.github.yaksenseback.visit.application.dto.VisitDto;
 import io.github.yaksenseback.visit.application.dto.VisitSearchRequest;
 import io.github.yaksenseback.visit.domain.Visit;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class VisitQueryRestController {
     }
 
     @GetMapping("/patients/{patientId}")
-    public List<Visit> getAllVisitsByPatient(@PathVariable Long patientId,
-                                             @ModelAttribute VisitSearchRequest request) {
+    public List<VisitDto> getAllVisitsByPatient(@PathVariable Long patientId,
+                                                @ModelAttribute VisitSearchRequest request) {
         return visitQueryService.getAllVisitsByPatient(patientId, request);
     }
 

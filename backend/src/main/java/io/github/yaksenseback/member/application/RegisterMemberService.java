@@ -45,6 +45,7 @@ public class RegisterMemberService {
                 .name(request.getName())
                 .address(request.getAddress())
                 .birthDate(request.getBirthDate())
+                .gender(request.getGender())
                 .chronicDisease(request.getChronicDisease())
                 .medicalHistory(request.getMedicalHistory())
                 .build();

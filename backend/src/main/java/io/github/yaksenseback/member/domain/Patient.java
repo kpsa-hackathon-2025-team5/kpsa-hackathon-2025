@@ -7,6 +7,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +29,12 @@ public class Patient extends Member {
      */
     @Column(name = "birth_date")
     private LocalDate birthDate;
+
+    /**
+     * 성별
+     */
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     /**
      * 거주지 주소
@@ -54,14 +62,23 @@ public class Patient extends Member {
                    String profileImageUrl,
                    String name,
                    LocalDate birthDate,
+                   Gender gender,
                    String address,
                    String medicalHistory,
                    List<String> chronicDisease) {
         super(username, password, profileImageUrl, name, MemberType.PATIENT);
         this.birthDate = birthDate;
+        this.gender = gender;
         this.address = address;
         this.medicalHistory = medicalHistory;
         this.chronicDisease = chronicDisease;
+    }
+
+    public int getAge() {
+        if (birthDate == null) {
+            return 0; // 생년월일이 없는 경우
+        }
+        return LocalDate.now().getYear() - birthDate.getYear();
     }
 
 }

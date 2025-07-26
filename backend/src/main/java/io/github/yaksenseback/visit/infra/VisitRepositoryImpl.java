@@ -21,7 +21,7 @@ public class VisitRepositoryImpl implements VisitCustomRepository {
 
         return queryFactory.selectFrom(QVisit.visit)
                 .where(QVisit.visit.patient.id.eq(patientId))
-                .orderBy(qVisit.scheduledStartDate.desc())
+                .orderBy(qVisit.scheduledStartDateTime.desc())
                 .fetch();
     }
 
@@ -30,7 +30,7 @@ public class VisitRepositoryImpl implements VisitCustomRepository {
 
         return queryFactory.selectFrom(QVisit.visit)
                 .where(QVisit.visit.pharmacist.id.eq(pharmacistId))
-                .orderBy(qVisit.scheduledStartDate.desc())
+                .orderBy(qVisit.scheduledStartDateTime.desc())
                 .fetch();
     }
 
