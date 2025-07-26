@@ -1,7 +1,6 @@
 <script setup lang="ts">
-
-const {isAuthenticated} = storeToRefs(useAuthStore())
-const {login} = useAuthStore()
+const { isAuthenticated } = storeToRefs(useAuthStore());
+const { login } = useAuthStore();
 </script>
 
 <template>
@@ -12,9 +11,10 @@ const {login} = useAuthStore()
         <span class="bg-black"> 로그인 완료</span>
       </div>
       <div v-else>
-        <button @click="login('patients', '1234')" class="btn btn-xs btn-primary">Login</button>
+        <button @click="login('test', '1234')" class="btn btn-xs btn-primary">
+          Login
+        </button>
       </div>
-
     </div>
   </header>
 </template>

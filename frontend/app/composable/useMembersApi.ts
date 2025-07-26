@@ -1,13 +1,13 @@
-import {useApi} from "@/composable/useApi"
+import { useApi } from "@/composable/useApi";
 
 export const useMembersApi = () => {
-    const {apiCall, authenticatedCall} = useApi()
+  const { apiCall, authenticatedCall } = useApi();
 
-    const getMembers = async () => {
-        return apiCall('/api/v1/members')
-    }
+  const getMembers = async () => {
+    return apiCall("/api/v1/members");
+  };
 
-    return {
-        getMembers
-    }
-}
+  return {
+    getMembers,
+  };
+};
