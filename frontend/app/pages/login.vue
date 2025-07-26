@@ -30,7 +30,7 @@ const login = async () => {
 
     // 홈 페이지가 없다면 일단 콘솔로 확인
     console.log("로그인 완료! 홈으로 이동 시도");
-    navigateTo("/splash");
+    navigateTo("/takerSelect");
   } catch (error: any) {
     console.error("로그인 오류:", error);
 

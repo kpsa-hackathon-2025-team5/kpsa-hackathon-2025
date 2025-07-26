@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useMembersApi } from "@/composable/useMembersApi";
+import { useApi } from "@/composable/useApi";
+const { apiCall } = useApi();
 
 // 타입 정의
 interface CaregivingPerson {
@@ -46,31 +48,82 @@ const confirmSelection = (): void => {
 const loadPatients = async (): Promise<void> => {
   try {
     isLoading.value = true;
-    const members: Member[] = await getMembers();
+
+    console.log("=== API 호출 시작 ===");
+    const members: Member[] = await apiCall("/api/v1/guardians/1/patients");
+
+    console.log("=== 전체 멤버 데이터 ===");
+    console.log("총 멤버 수:", members.length);
+    console.log("전체 데이터:", members);
+
+    // 각 멤버의 상세 정보 출력
+    members.forEach((member, index) => {
+      console.log(`--- 멤버 ${index + 1} ---`);
+      console.log("ID:", member.id);
+      console.log("이름:", member.name);
+      console.log("멤버 타입:", member.memberType);
+      console.log("상태:", member.status);
+      console.log("생년월일:", member.birthDate);
+      console.log("성별:", member.gender);
+      console.log("전체 객체:", member);
+    });
 
     // PATIENT 타입의 멤버만 필터링하고 변환
-    caregivingList.value = members
-      .filter(
-        (member: Member) =>
-          member.memberType === "PATIENT" && member.status === "ACTIVE"
-      )
-      .map(
-        (member: Member): CaregivingPerson => ({
-          id: member.id.toString(),
-          name: member.name,
-          age: calculateAge(member.birthDate) || 79,
-          gender: member.gender || "여성",
-          image: `https://images.unsplash.com/photo-${
-            member.id % 2 === 0
-              ? "1544005313-94ddf0286df2"
-              : "1507003211169-0a1dd7228f2d"
-          }?w=150&h=150&fit=crop&crop=face`,
-        })
+    const filteredMembers = members.filter((member: Member) => {
+      console.log(
+        `필터링 확인 - ${member.name}: 타입=${member.memberType}, 상태=${member.status}`
       );
+
+      // 다양한 가능성을 고려한 필터링
+      const isPatient =
+        member.memberType === "PATIENT" ||
+        member.memberType === "patient" ||
+        member.memberType === "복용자" ||
+        member.memberType === "환자";
+
+      const isActive =
+        member.status === "ACTIVE" ||
+        member.status === "active" ||
+        member.status === "활성";
+
+      const result = isPatient && isActive;
+      console.log(`${member.name} 필터링 결과:`, result);
+
+      return result;
+    });
+
+    console.log("=== 필터링 결과 ===");
+    console.log("필터링된 복용자 수:", filteredMembers.length);
+    console.log("필터링된 데이터:", filteredMembers);
+
+    caregivingList.value = filteredMembers.map(
+      (member: Member): CaregivingPerson => ({
+        id: member.id.toString(),
+        name: member.name,
+        age: calculateAge(member.birthDate) || 79,
+        gender: member.gender || "여성",
+        image: `https://images.unsplash.com/photo-${
+          member.id % 2 === 0
+            ? "1544005313-94ddf0286df2"
+            : "1507003211169-0a1dd7228f2d"
+        }?w=150&h=150&fit=crop&crop=face`,
+      })
+    );
+
+    console.log("=== 최종 화면 표시 데이터 ===");
+    console.log("caregivingList:", caregivingList.value);
+
+    // 복용자가 없는 경우 메시지 표시
+    if (caregivingList.value.length === 0) {
+      console.warn("⚠️ 필터링된 복용자가 없습니다. 기본 데이터를 사용합니다.");
+      throw new Error("복용자 데이터 없음");
+    }
   } catch (error) {
+    console.log("=== API 호출 실패 - 기본 데이터 사용 ===");
     console.error("복용자 데이터 로딩 실패:", error);
-    // 에러 시 기본 데이터 사용
-    caregivingList.value = [
+
+    // 에러 시 기본 데이터 사용 (복용자만)
+    const defaultData = [
       {
         id: "lee-jeong-sun",
         name: "이정순",
@@ -96,8 +149,12 @@ const loadPatients = async (): Promise<void> => {
           "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face",
       },
     ] as CaregivingPerson[];
+
+    caregivingList.value = defaultData;
+    console.log("기본 데이터 설정:", defaultData);
   } finally {
     isLoading.value = false;
+    console.log("=== 데이터 로딩 완료 ===");
   }
 };
 
@@ -148,7 +205,7 @@ onMounted(() => {
     </header>
 
     <!-- 메인 콘텐츠 -->
-    <main class="px-4 pt-6 pb-8">
+    <main class="px-4 pt-6 pb-28">
       <!-- 제목 -->
       <section class="mb-8">
         <h1 class="text-2xl font-bold text-gray-900 leading-tight">
@@ -157,7 +214,7 @@ onMounted(() => {
       </section>
 
       <!-- 복용자 목록 -->
-      <section class="mb-6">
+      <section class="mb-8">
         <div v-if="isLoading" class="flex justify-center py-8">
           <div
             class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
