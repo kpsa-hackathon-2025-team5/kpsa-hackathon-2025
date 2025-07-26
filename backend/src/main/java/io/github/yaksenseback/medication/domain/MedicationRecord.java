@@ -53,24 +53,26 @@ public class MedicationRecord extends BaseEntity {
      */
     private boolean isTaken = false;
 
-
     private LocalDateTime takenAt; //FIXME: 복약 기록이 남겨진 시간
 
     /**
      * 이상 반응 종류
      */
     @Enumerated(EnumType.STRING)
+    @Deprecated
     private SideEffectType sideEffectType;
 
     /**
      * 이상 반응 정도
      */
     @Enumerated(EnumType.STRING)
+    @Deprecated
     private SideEffectLevel sideEffectLevel;
 
     /**
      * 메모
      */
+    @Deprecated
     private String sideEffectNote;
 
 
@@ -81,9 +83,9 @@ public class MedicationRecord extends BaseEntity {
 
 
     public void taken(SideEffectType sideEffectType, SideEffectLevel sideEffectLevel, String sideEffectNote, LocalDateTime takenAt) {
-        this.sideEffectType = sideEffectType;
-        this.sideEffectNote = sideEffectNote;
-        this.sideEffectLevel = sideEffectLevel;
+//        this.sideEffectType = sideEffectType;
+//        this.sideEffectNote = sideEffectNote;
+//        this.sideEffectLevel = sideEffectLevel;
         this.isTaken = true;
         this.takenAt = takenAt;
     }

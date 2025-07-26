@@ -5,6 +5,7 @@ import io.github.yaksenseback.medication.domain.MedicationPrescriptionRepository
 import io.github.yaksenseback.medication.domain.MedicationRecord;
 import io.github.yaksenseback.medication.domain.MedicationRecordRepository;
 import io.github.yaksenseback.medication.domain.MedicationScheduleRepository;
+import io.github.yaksenseback.medication.domain.TimeLabel;
 import io.github.yaksenseback.member.application.dto.MedicationScheduleDto;
 import io.github.yaksenseback.member.application.dto.PatientDetailDto;
 import io.github.yaksenseback.member.domain.Patient;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -43,9 +45,19 @@ public class PatientQueryService {
     }
 
     public List<MedicationRecord> getPatientMedicationRecords(Long id) {
-        medicationRecordRepository.findAllByMemberId(id)
+        return medicationRecordRepository.findAllByMemberId(id)
                 .stream()
                 .toList();
-        return null;
     }
+
+    /**
+     * 오늘 복용해야할 약 목록
+     */
+    public List<MedicationScheduleDto> getTodayMedicationSchedule(Long memberId, TimeLabel timeLabel, LocalDate date) {
+        return medicationScheduleRepository.findAllMedicationSchedules(memberId, timeLabel, date)
+                .stream()
+                .map(MedicationScheduleDto::new)
+                .toList();
+    }
+
 }

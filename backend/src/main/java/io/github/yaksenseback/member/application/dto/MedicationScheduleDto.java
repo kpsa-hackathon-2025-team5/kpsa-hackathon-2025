@@ -1,6 +1,7 @@
 package io.github.yaksenseback.member.application.dto;
 
 import io.github.yaksenseback.medication.domain.MedicationSchedule;
+import io.github.yaksenseback.medication.domain.TimeLabel;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -14,10 +15,11 @@ public class MedicationScheduleDto {
 //    @JsonIgnore
 //    private MedicationSchedule medicationSchedule;
 
-    private Long id;
+    //    private Long id;
+    private Long medicationScheduleId;
     private Long memberId;
     private LocalTime medicationTime;
-    private String timeLabel;
+    private TimeLabel timeLabel;
     private Boolean isActive;
     private LocalDateTime lastTakenAt;
     private String scheduleMemo;
@@ -34,7 +36,8 @@ public class MedicationScheduleDto {
 
 
     public MedicationScheduleDto(MedicationSchedule medicationSchedule) {
-        this.id = medicationSchedule.getId();
+        // this.id = medicationSchedule.getId();
+        this.medicationScheduleId = medicationSchedule.getId();
         this.memberId = medicationSchedule.getMemberId();
         this.medicationTime = medicationSchedule.getMedicationTime();
         this.timeLabel = medicationSchedule.getTimeLabel();

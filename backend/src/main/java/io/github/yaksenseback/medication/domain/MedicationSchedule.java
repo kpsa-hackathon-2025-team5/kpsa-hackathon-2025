@@ -6,6 +6,8 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import io.github.yaksenseback.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -56,7 +58,8 @@ public class MedicationSchedule extends BaseEntity {
      * 시간대 라벨 (아침, 점심, 저녁, 취침전 등)
      */
     @Column(name = "time_label", length = 50)
-    private String timeLabel;
+    @Enumerated(EnumType.STRING)
+    private TimeLabel timeLabel;
 
     /*
      * 스케줄 활성화 여부
@@ -77,7 +80,7 @@ public class MedicationSchedule extends BaseEntity {
     @Column(name = "schedule_memo", length = 200)
     private String scheduleMemo;
 
-    public MedicationSchedule(LocalTime medicationTime, String timeLabel, String scheduleMemo) {
+    public MedicationSchedule(LocalTime medicationTime, TimeLabel timeLabel, String scheduleMemo) {
         this.medicationTime = medicationTime;
         this.timeLabel = timeLabel;
         this.scheduleMemo = scheduleMemo;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -27,13 +28,14 @@ public class MedicationRecordService {
         return medicationRecordRepository.save(new MedicationRecord(memberId, medicationSchedule));
     }
 
-    public MedicationRecord taken(Long medicationScheduleId, SideEffectType sideEffectType, SideEffectLevel sideEffectLevel, String sideEffectNote) {
-        var medicationRecord = medicationRecordRepository.findByMedicationScheduleId(medicationScheduleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Medication record not found with medication schedule id: " + medicationScheduleId));
-
-        medicationRecord.taken(sideEffectType, sideEffectLevel, sideEffectNote, LocalDateTime.now());
-
-        return medicationRecordRepository.save(medicationRecord);
+    public void taken(List<Long> medicationScheduleIds, SideEffectType sideEffectType, SideEffectLevel sideEffectLevel, String sideEffectNote) {
+        medicationScheduleRepository.findAllById(medicationScheduleIds).forEach(
+                medicationSchedule -> {
+                    var medicationRecord = medicationRecordRepository.findByMedicationScheduleId(medicationSchedule.getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Medication record not found with medication schedule id: " + medicationSchedule.getId()));
+                    medicationRecord.taken(sideEffectType, sideEffectLevel, sideEffectNote, LocalDateTime.now());
+                    medicationRecord.taken(sideEffectType, sideEffectLevel, sideEffectNote, LocalDateTime.now());
+                });
     }
 
 }

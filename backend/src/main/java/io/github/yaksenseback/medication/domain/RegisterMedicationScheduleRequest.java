@@ -4,6 +4,6 @@ import java.time.LocalTime;
 
 public record RegisterMedicationScheduleRequest(
         LocalTime medicationTime,
-        String timeLabel,
+        TimeLabel timeLabel,
         String scheduleMemo) {
 }
