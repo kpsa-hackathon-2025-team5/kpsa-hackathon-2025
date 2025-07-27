@@ -34,6 +34,11 @@ const isDetailSelected = (detail: string) => {
 };
 
 const completeRecord = () => {
+  // 현재 URL에서 id 추출
+  const currentPath = window.location.pathname;
+  const pathParts = currentPath.split("/");
+  const patientId = pathParts[pathParts.length - 1]; // 마지막 부분이 id
+
   if (selectedSymptom.value === "기타") {
     console.log("선택된 증상:", selectedSymptom.value);
     console.log("사용자 입력 증상:", customSymptom.value);
@@ -41,8 +46,9 @@ const completeRecord = () => {
     console.log("선택된 증상:", selectedSymptom.value);
     console.log("선택된 세부사항:", selectedDetails.value);
   }
-  // 완료 처리
-  navigateTo("/dashboard");
+
+  // id 파라미터를 포함해서 첫 번째 페이지로 이동
+  navigateTo(`/takerInformation/${patientId}`);
 };
 
 // 증상별 세부 옵션

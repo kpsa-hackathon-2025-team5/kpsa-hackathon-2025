@@ -69,55 +69,41 @@ const getPatientInfo = async () => {
 // API 호출 함수
 const fetchMedicationData = async () => {
   isLoading.value = true;
-  try {
-    const apiUrl = `/api/v1/medications/reports/monthlyCompliance?memberId=10&startDate=2025-07-26&endDate=2025-07-27`;
-    console.log("API 호출 URL:", apiUrl);
 
-    // 임시 테스트 데이터 (API 문제 확인용)
-    const testData = [
-      { date: "2025-07-26", result: 1 },
-      { date: "2025-07-27", result: 0 },
-    ];
+  // 현재 월의 시작일과 종료일
+  const startDate = `${currentYear.value}-${String(
+    currentMonth.value + 1
+  ).padStart(2, "0")}-01`;
+  const endDate = `${currentYear.value}-${String(
+    currentMonth.value + 1
+  ).padStart(2, "0")}-${String(daysInMonth.value).padStart(2, "0")}`;
+
+  try {
+    const apiUrl = `/api/v1/medications/reports/monthlyCompliance?memberId=10&startDate=${startDate}&endDate=${endDate}`;
+    console.log("📡 API 호출 URL:", apiUrl);
 
     let data;
     try {
       data = await apiCall(apiUrl);
-      console.log("실제 API 응답 데이터:", data);
+      console.log("📦 실제 API 응답:", data);
     } catch (apiError) {
-      console.log("API 호출 실패, 테스트 데이터 사용:", apiError);
-      data = testData; // API 실패 시 테스트 데이터 사용
+      console.log("❌ API 호출 실패, 테스트 데이터 사용:", apiError);
+      data = [
+        { date: `${startDate}`, result: 1 },
+        { date: `${endDate}`, result: 0 },
+      ];
     }
 
-    console.log("사용할 데이터:", data);
-
-    // 데이터를 날짜별 객체로 변환
     const dataMap: Record<string, { result: number }> = {};
     if (Array.isArray(data)) {
       data.forEach((item: { date: string; result: number }) => {
         dataMap[item.date] = { result: item.result };
-        console.log(`📅 날짜: ${item.date}, 상태: ${item.result}`);
       });
-    } else {
-      console.error("❌ 데이터가 배열이 아닙니다:", typeof data, data);
     }
 
     medicationData.value = dataMap;
-    console.log("🔄 변환된 데이터:", medicationData.value);
-
-    // 현재 월의 모든 날짜에 대해 상태 확인
-    console.log("🗓️ 현재 월 상태 확인:");
-    for (let day = 1; day <= 31; day++) {
-      const dateKey = `${currentYear.value}-${String(
-        currentMonth.value + 1
-      ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-      const status = dataMap[dateKey];
-      if (status) {
-        console.log(`✅ ${dateKey}: result=${status.result}`);
-      }
-    }
   } catch (error) {
     console.error("복약 데이터 로드 실패:", error);
-    console.error("에러 상세:", JSON.stringify(error, null, 2));
   } finally {
     isLoading.value = false;
   }
@@ -206,22 +192,23 @@ const getMedicationStatus = (day: number) => {
 const getDayClass = (day: number) => {
   const status = getMedicationStatus(day);
   const baseClass =
-    "w-10 h-10 flex items-center justify-center text-sm font-medium transition-all duration-200 rounded-lg relative";
+    "w-8 h-8 flex items-center justify-center text-sm font-medium transition-all duration-200 rounded-lg relative";
 
   const dateKey = `${currentYear.value}-${String(
     currentMonth.value + 1
   ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
   if (status) {
-    console.log(
-      `🎨 ${dateKey} (${day}일): 파란색 적용, result=${status.result}`
-    );
-    // 모든 복약 데이터가 있는 날은 파란색으로 표시
-    return `${baseClass} bg-blue-500 text-white hover:bg-blue-600`;
-  } else {
-    // 특정 날짜만 로그 (26, 27일)
-    if (day === 26 || day === 27) {
-      console.log(`⚪ ${dateKey} (${day}일): 데이터 없음, 기본 스타일`);
+    const result = status.result;
+    if (result === 1) {
+      console.log(`🟦 ${dateKey}: 연한 파란색`);
+      return `${baseClass} bg-blue-100 text-blue-700 hover:bg-blue-200`;
+    } else if (result === 2) {
+      console.log(`🔲 ${dateKey}: 테두리만 있음`);
+      return `${baseClass} border border-blue-500 text-blue-700`;
+    } else {
+      console.log(`✅ ${dateKey}: 기타 처리 필요`);
+      return `${baseClass} bg-blue-500 text-white hover:bg-blue-600`;
     }
   }
 
@@ -389,7 +376,7 @@ onMounted(() => {
             <button
               class="flex items-center text-sm text-gray-500 hover:text-gray-700 transition-colors"
             >
-              <span>복약 이해율</span>
+              <span>복약 이행율</span>
               <svg
                 class="w-4 h-4 ml-1"
                 fill="none"
@@ -404,12 +391,12 @@ onMounted(() => {
         </div>
 
         <!-- 범례 -->
-        <div class="mt-4 flex justify-center space-x-6">
+        <!-- <div class="mt-4 flex justify-center space-x-6">
           <div class="flex items-center space-x-2">
             <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
             <span class="text-xs text-gray-600">복약함</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

@@ -200,7 +200,7 @@ onMounted(() => {
       <h2
         class="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold text-gray-900"
       >
-        복용자 선택
+        복용자 선택하기
       </h2>
     </header>
 

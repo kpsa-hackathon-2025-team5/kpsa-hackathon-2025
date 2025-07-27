@@ -193,9 +193,7 @@ const markAsCompleted = async () => {
     console.log("복용 완료 처리");
 
     // 성공 후 이전 페이지로 이동
-    setTimeout(() => {
-      goBack();
-    }, 500);
+    navigateTo("/adverseReporting");
   } catch (error) {
     console.error("복용 완료 처리 실패:", error);
   } finally {
@@ -211,9 +209,7 @@ const markAsIncomplete = async () => {
     console.log("복용 미완료 처리");
 
     // 성공 후 이전 페이지로 이동
-    setTimeout(() => {
-      goBack();
-    }, 500);
+    navigateTo("/adverseReporting");
   } catch (error) {
     console.error("복용 미완료 처리 실패:", error);
   } finally {
