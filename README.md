@@ -46,7 +46,7 @@
 로컬 또는 GitHub Codespace/CLI 환경에서 아래 명령어를 입력합니다:
 
 ```bash
-git log --pretty=format:"%h - %an, %ad : %s" --date=short > commit-log.txt
+git log --pretty=format:"%h - %an, %ad : %s" --date=short > team05_commit-log.txt
 ```
 
 - `commit-log.txt` 파일이 생성되며, 이를 그대로 제출하시면 됩니다.
@@ -58,9 +58,9 @@ git log --pretty=format:"%h - %an, %ad : %s" --date=short > commit-log.txt
 - 첫 커밋은 `README.md` 수정을 통해 아래 양식을 작성한 후 진행해 주세요.
 - 팀명과 아이디어명은 발표 전 변경 가능합니다.
 
-## 팀명: 
+## 팀명: YakSense
 
-## 아이디어 명:
+## 아이디어 명: 고령자를 위한 약사 방문 복약관리 · AI 레포트 플랫폼
 
 
 
