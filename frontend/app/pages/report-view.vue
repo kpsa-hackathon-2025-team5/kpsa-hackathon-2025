@@ -122,8 +122,20 @@ const getConsultationType = (record: any) => {
 // 리포트 상세 보기
 const viewReportDetail = (record: any) => {
   console.log("리포트 상세 보기:", record);
-  // 상세 페이지로 이동
-  // navigateTo(`/report-detail/${record.id}`);
+
+  // sessionStorage에 데이터 저장
+  sessionStorage.setItem(
+    "selectedReport",
+    JSON.stringify({
+      date: record.scheduledStartDateTime,
+      recordId: record.id,
+      pharmacist:
+        record.pharmacist || record.name || record.pharmacistName || "김지윤",
+      type: record.consultationType || record.type || "복약 상담",
+    })
+  );
+
+  navigateTo("/consultationRecords");
 };
 
 // 컴포넌트 마운트 시 데이터 가져오기
