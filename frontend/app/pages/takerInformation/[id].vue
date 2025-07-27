@@ -90,7 +90,7 @@ const services = [
   },
   {
     id: "report-view",
-    title: "리포트 열람하기",
+    title: "상담 기록 확인하기",
     icon: "📊",
     description: "복약 관리 리포트를 확인합니다",
     bgColor: "bg-gradient-to-br from-purple-400 to-purple-600",

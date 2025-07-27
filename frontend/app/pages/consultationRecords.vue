@@ -481,6 +481,9 @@ const pharmacistInfo = {
       </div>
 
       <!-- AI 리포트 다운로드 버튼 -->
+      <NuxtLink to="/pdf-report">
+
+
       <div class="mt-8">
         <button
           @click="downloadReport"
@@ -502,6 +505,7 @@ const pharmacistInfo = {
           <span>AI 리포트 열람(PDF)</span>
         </button>
       </div>
+      </NuxtLink>
     </div>
   </div>
 </template>

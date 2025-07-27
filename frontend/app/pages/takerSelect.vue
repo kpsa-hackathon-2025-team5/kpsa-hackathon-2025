@@ -295,7 +295,7 @@ onMounted(() => {
               : 'bg-gray-300 text-gray-500 cursor-not-allowed',
           ]"
         >
-          신청하기
+          선택하기
         </button>
       </section>
     </main>

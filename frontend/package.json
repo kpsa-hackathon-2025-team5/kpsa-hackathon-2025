@@ -6,12 +6,14 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "generate:backend": "nuxt generate --backend",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.11.2",
     "@tailwindcss/vite": "^4.1.11",
+    "@vue-pdf-viewer/viewer": "^2.5.8",
     "@vuepic/vue-datepicker": "^11.0.2",
     "chart.js": "^4.5.0",
     "daisyui": "^5.0.46",

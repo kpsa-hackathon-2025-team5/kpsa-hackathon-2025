@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { useApi } from "@/composable/useApi";
 import {usePatientStore} from "~/stores/usePatientStore"
 
-const { apiCall } = useApi();
+const { apiCall, getImageUrl } = useApi();
 
 const visitRecords = ref([]);
 const isLoading = ref(false);
@@ -13,6 +13,8 @@ const goBack = () => {
   window.history.back();
 };
 
+
+const memberInfo = ref({})
 // 환자 정보 가져오기
 const getPatientInfo = async () => {
   try {
@@ -21,11 +23,12 @@ const getPatientInfo = async () => {
 
     console.log("환자 정보 API 요청", { patientId });
 
-    const result = await apiCall(`/api/v1/visits/patients/${patientId}`, {
+    const result = await apiCall(`/api/v1/patients/${patientId}`, {
       method: "GET",
     });
+    memberInfo.value = result
 
-    console.log("환자 정보 API 응답:", result);
+    console.log("환자 정보 API 응답:2", result);
     const name =
       result.name || result.patientName || result.memberName || "사용자";
     patientName.value = name;
@@ -144,7 +147,7 @@ const viewReportDetail = (record: any) => {
 
 // 컴포넌트 마운트 시 데이터 가져오기
 onMounted(async () => {
-  // await getPatientInfo();
+  await getPatientInfo();
   await getVisitRecords();
 });
 </script>
@@ -178,14 +181,33 @@ onMounted(async () => {
 
     <!-- 메인 컨텐츠 -->
     <div class="flex-1 px-6 py-8 overflow-y-auto pb-24">
-      <!-- 프로필 및 아이콘 섹션 -->
-      <div class="flex items-center justify-center mb-8">
-        <!-- 프로필 이미지만 -->
+      <!-- 프로필 및 환자 정보 섹션 -->
+      <div class="mb-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center">
+        <!-- 프로필 이미지 -->
         <img
-          src="~/assets/report.png"
-          alt="의료 기록"
-          class="w-24 h-24 object-contain"
+          :src="getImageUrl(memberInfo.profileImageUrl)"
+          alt="환자 프로필"
+          class="w-16 h-16 rounded-full object-cover mr-6"
         />
+        <!-- 환자 정보 -->
+        <div class="space-y-2 text-gray-700 flex-1 text-sm">
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-500">환자명</span>
+            <span class="font-semibold">{{ memberInfo.name || '정보 없음' }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-500">생년월일</span>
+            <span>{{ memberInfo.birthDate || '정보 없음' }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-500">성별</span>
+            <span>{{ memberInfo.gender || '정보 없음' }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-500">연락처</span>
+            <span>{{ memberInfo.phoneNumber || '정보 없음' }}</span>
+          </div>
+        </div>
       </div>
 
       <!-- 제목 섹션 -->
