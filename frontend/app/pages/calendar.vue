@@ -2,6 +2,7 @@
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { useApi } from "@/composable/useApi";
+import {usePatientStore} from "~/stores/usePatientStore"
 const { apiCall } = useApi();
 
 const selectedDate = ref(new Date());
@@ -46,8 +47,11 @@ const confirmBooking = async () => {
     ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
     const timeStr = selectedTime.value.padStart(5, "0");
 
+    const {memberId} = usePatientStore()
+    const patientId = memberId;
+
     const requestBody = {
-      patientId: 10,
+      patientId: patientId,
       pharmacistId: 7,
       scheduledStartDateTime: `${dateStr} ${timeStr}`,
     };
@@ -61,7 +65,8 @@ const confirmBooking = async () => {
 
     console.log("예약 성공:", result);
     alert("예약이 완료되었습니다!");
-    navigateTo("/takerInformation");
+    navigateTo("/pharmacy-visit")
+
   } catch (error: any) {
     console.error("예약 실패:", error);
 

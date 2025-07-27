@@ -4,8 +4,8 @@ import { ref } from "vue";
 // 스토어 import (경로 확인 필요)
 const authStore = useAuthStore();
 
-const userId = ref("");
-const password = ref("");
+const userId = ref("test");
+const password = ref("1234");
 const showPassword = ref(false);
 const isLoading = ref(false);
 const errorMessage = ref("");

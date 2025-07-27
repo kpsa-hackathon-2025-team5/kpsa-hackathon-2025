@@ -2,7 +2,8 @@
 import { ref, onMounted } from "vue";
 import { useMembersApi } from "@/composable/useMembersApi";
 import { useApi } from "@/composable/useApi";
-const { apiCall } = useApi();
+import {usePatientStore} from "~/stores/usePatientStore"
+const { apiCall, getImageUrl } = useApi();
 
 // 타입 정의
 interface CaregivingPerson {
@@ -28,6 +29,9 @@ const isLoading = ref<boolean>(true);
 
 const { getMembers } = useMembersApi();
 
+const store = usePatientStore()
+
+
 const goBack = (): void => {
   window.history.back();
 };
@@ -39,6 +43,7 @@ const selectCaregiving = (person: string): void => {
 const confirmSelection = (): void => {
   if (selectedCaregiving.value) {
     console.log("선택된 복용자:", selectedCaregiving.value);
+    store.setMemberId(selectedCaregiving.value)
     // 다음 페이지로 이동
     navigateTo(`/takerInformation/${selectedCaregiving.value}`);
   }
@@ -102,11 +107,12 @@ const loadPatients = async (): Promise<void> => {
         name: member.name,
         age: calculateAge(member.birthDate) || 79,
         gender: member.gender || "여성",
-        image: `https://images.unsplash.com/photo-${
+        /*image: `https://images.unsplash.com/photo-${
           member.id % 2 === 0
             ? "1544005313-94ddf0286df2"
             : "1507003211169-0a1dd7228f2d"
-        }?w=150&h=150&fit=crop&crop=face`,
+        }?w=150&h=150&fit=crop&crop=face`,*/
+        image: getImageUrl(member.profileImageUrl),
       })
     );
 
@@ -177,7 +183,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gray-50">
+  <div class="bg-gray-50 h-full">
     <!-- 헤더 -->
     <header
       class="relative flex items-center px-4 py-4 bg-white border-b border-gray-100"
@@ -207,7 +213,7 @@ onMounted(() => {
     <!-- 메인 콘텐츠 -->
     <main class="px-4 pt-6 pb-28">
       <!-- 제목 -->
-      <section class="mb-8">
+      <section class="mb-4">
         <h1 class="text-2xl font-bold text-gray-900 leading-tight">
           복용자를<br />선택해주세요.
         </h1>

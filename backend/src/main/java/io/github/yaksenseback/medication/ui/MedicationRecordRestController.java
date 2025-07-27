@@ -36,6 +36,28 @@ public class MedicationRecordRestController {
         );
     }
 
+    @PostMapping("/bulk")
+    public void createMedicationRecordBulk(@RequestBody CreateMedicationRecordRequestBulk request) {
+
+        // request.scheduledStart()와 request.scheduledEnd() 사이의 날짜를 순회하며 MedicationRecord 생성
+        LocalDate startDate = request.scheduledStart();
+        LocalDate endDate = request.scheduledEnd();
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Scheduled start date cannot be after scheduled end date.");
+        }
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            LocalDate finalDate = date;
+            request.medicationScheduleIds().forEach(id -> {
+                medicationRecordService.createMedicationRecord(
+                        request.memberId(),
+                        finalDate,
+                        id
+                );
+            });
+        }
+
+    }
+
     @PostMapping("/taken")
     public void taken(@RequestBody TakenMedicationRecordRequest request) {
         medicationRecordService.taken(
@@ -57,6 +79,15 @@ public class MedicationRecordRestController {
             Long medicationScheduleId,
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
             LocalDate scheduledAt) {
+    }
+
+    public record CreateMedicationRecordRequestBulk(
+            Long memberId,
+            List<Long> medicationScheduleIds,
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+            LocalDate scheduledStart,
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+            LocalDate scheduledEnd) {
     }
 
     public record TakenMedicationRecordRequest(List<Long> medicationScheduleIds,

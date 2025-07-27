@@ -6,7 +6,7 @@ const route = useRoute();
 const { apiCall } = useApi();
 
 // 환자 이름을 저장할 반응형 변수
-const patientName = ref("사용자");
+const patientName = ref("");
 
 const goBack = () => {
   window.history.back();
@@ -131,7 +131,10 @@ const services = [
       <h1
         class="absolute left-1/2 transform -translate-x-1/2 text-lg font-semibold text-gray-900"
       >
+        <div>
+
         {{ patientName }}
+        </div>
       </h1>
     </div>
 

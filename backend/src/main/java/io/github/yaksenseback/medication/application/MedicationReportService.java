@@ -28,11 +28,9 @@ public class MedicationReportService {
     /**
      * 월별 달력용 일자별 복약 현황 조회
      */
-    public List<DailyComplianceResponse> getDailyCompliance(
-            Long memberId,
-            LocalDate startDate,
-            LocalDate endDate) {
-
+    public List<DailyComplianceResponse> getDailyCompliance(Long memberId,
+                                                            LocalDate startDate,
+                                                            LocalDate endDate) {
         List<DailyComplianceResponse> result = new ArrayList<>();
 
         // 각 날짜별로 처리
@@ -42,7 +40,7 @@ public class MedicationReportService {
 
             int complianceResult;
             if (requiredCount == 0) {
-                complianceResult = 0; // 복용할 약이 없음
+                complianceResult = -1; // 복용할 약이 없음
             } else if (takenCount == 0) {
                 complianceResult = 2; // 모두 복용하지 않음
             } else if (takenCount == requiredCount) {

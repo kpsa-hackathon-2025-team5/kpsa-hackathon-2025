@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
-import { useApi } from "@/composable/useApi";
+import {computed, onMounted, ref, watch} from "vue";
+import {useApi} from "@/composable/useApi";
+import {usePatientStore} from "~/stores/usePatientStore"
 
 const { apiCall } = useApi();
 
@@ -23,7 +24,8 @@ const isLoading = ref(false);
 // 환자 정보 가져오기
 const getPatientInfo = async () => {
   try {
-    const patientId = 10;
+    const {memberId} = usePatientStore()
+    const patientId = memberId;
 
     console.log("환자 정보 API 요청", { patientId });
 
@@ -79,7 +81,8 @@ const fetchMedicationData = async () => {
   ).padStart(2, "0")}-${String(daysInMonth.value).padStart(2, "0")}`;
 
   try {
-    const apiUrl = `/api/v1/medications/reports/monthlyCompliance?memberId=10&startDate=${startDate}&endDate=${endDate}`;
+    const {memberId} = usePatientStore()
+    const apiUrl = `/api/v1/medications/reports/monthlyCompliance?memberId=${memberId}&startDate=${startDate}&endDate=${endDate}`;
     console.log("📡 API 호출 URL:", apiUrl);
 
     let data;
@@ -206,7 +209,7 @@ const getDayClass = (day: number) => {
     } else if (result === 2) {
       console.log(`🔲 ${dateKey}: 테두리만 있음`);
       return `${baseClass} border border-blue-500 text-blue-700`;
-    } else {
+    } else if (result === 0) {
       console.log(`✅ ${dateKey}: 기타 처리 필요`);
       return `${baseClass} bg-blue-500 text-white hover:bg-blue-600`;
     }
@@ -354,10 +357,12 @@ onMounted(() => {
             {{ day }}
 
             <!-- 오늘 날짜 표시 -->
-            <div
-              v-if="isToday(day) && !getMedicationStatus(day)"
-              class="absolute inset-0 border-2 border-blue-400 rounded-lg pointer-events-none"
-            ></div>
+<!--            <div-->
+<!--              v-if="isToday(day)"-->
+<!--              class="absolute inset-0 border-2 border-blue-500 rounded-lg pointer-events-none"-->
+<!--            >-->
+
+<!--            </div>-->
           </div>
 
           <!-- 다음 월 날짜들 -->

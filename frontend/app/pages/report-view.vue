@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useApi } from "@/composable/useApi";
+import {usePatientStore} from "~/stores/usePatientStore"
 
 const { apiCall } = useApi();
 
@@ -15,7 +16,9 @@ const goBack = () => {
 // 환자 정보 가져오기
 const getPatientInfo = async () => {
   try {
-    const patientId = 9;
+    const {memberId} = usePatientStore()
+    const patientId = memberId;
+
     console.log("환자 정보 API 요청", { patientId });
 
     const result = await apiCall(`/api/v1/visits/patients/${patientId}`, {
@@ -53,7 +56,8 @@ const getPatientInfo = async () => {
 const getVisitRecords = async () => {
   try {
     isLoading.value = true;
-    const patientId = 9;
+    const {memberId} = usePatientStore()
+    const patientId = memberId;
 
     console.log("방문 기록 API 요청", { patientId });
 
@@ -140,7 +144,7 @@ const viewReportDetail = (record: any) => {
 
 // 컴포넌트 마운트 시 데이터 가져오기
 onMounted(async () => {
-  await getPatientInfo();
+  // await getPatientInfo();
   await getVisitRecords();
 });
 </script>

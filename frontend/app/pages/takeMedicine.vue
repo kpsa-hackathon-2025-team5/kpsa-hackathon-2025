@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-full bg-gray-200 flex flex-col">
+  <div class="h-full w-full bg-gray-200 flex flex-col">
     <!-- 헤더 -->
     <div class="relative flex items-center px-6 py-4 bg-gray-200">
       <button @click="goBack" class="mr-4 p-2">
@@ -42,7 +42,7 @@
 
       <!-- 약 목록 -->
       <!-- 약 목록 표시 -->
-      <div class="space-y-4 pb-10">
+      <div class="space-y-4 pb-4">
         <div
           v-for="(med, index) in medications"
           :key="med.medicationScheduleId"
@@ -60,13 +60,13 @@
       </div>
 
       <!-- 버튼 영역 -->
-      <div class="px-6 py-2 bg-gray-200">
+      <div class="px-0 bg-gray-200">
         <div class="grid grid-cols-2 gap-4">
           <!-- 복용 완료 버튼 -->
           <button
             @click="markAsCompleted"
             :disabled="isSubmitting"
-            class="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-3xl flex flex-col items-center justify-center space-y-2"
+            class="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-3xl flex flex-col items-center justify-center space-y-2 shadow-md"
           >
             <svg
               class="w-18 h-18"
@@ -91,7 +91,7 @@
           <button
             @click="markAsIncomplete"
             :disabled="isSubmitting"
-            class="bg-red-400 hover:bg-red-500 text-white py-6 rounded-3xl flex flex-col items-center justify-center space-y-3"
+            class="bg-red-400 hover:bg-red-500 text-white py-6 rounded-3xl flex flex-col items-center justify-center space-y-3 w-full shadow-md"
           >
             <svg
               class="w-18 h-18"

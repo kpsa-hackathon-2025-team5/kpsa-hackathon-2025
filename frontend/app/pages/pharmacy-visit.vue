@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useApi } from "@/composable/useApi";
+import {usePatientStore} from "~/stores/usePatientStore"
 const { apiCall } = useApi();
 
 // 환자 이름을 저장할 반응형 변수
@@ -52,7 +53,8 @@ const getPatientInfo = async () => {
 const getVisitSchedules = async () => {
   try {
     isLoading.value = true;
-    const patientId = 9;
+    const {memberId} = usePatientStore()
+    const patientId = memberId;
 
     console.log("방문 일정 API 요청", { patientId });
 

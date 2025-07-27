@@ -26,6 +26,10 @@ export const useApi = () => {
     if (!imagePath) {
       return `${baseURL}/api/v1/storage/image/default`;
     }
+    //imagePath에 pravatar 가 포함되면 그대로 반환
+    if (imagePath && imagePath.includes("pravatar")) {
+      return imagePath;
+    }
 
     return `${baseURL}/api/v1/storage/image/${imagePath}`
   }
